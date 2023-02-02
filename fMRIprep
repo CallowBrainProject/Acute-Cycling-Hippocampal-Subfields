@@ -1,0 +1,67 @@
+#!/bin/tcsh
+#SBATCH --time=168:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=6
+#SBATCH --mem=96000
+#SBATCH --mail-user=dcallow@umd.edu
+#SBATCH --mail-type=ALL
+#
+#
+set Sub= ($argv[1])
+#set Cond= ($argv[2])
+#
+#module load freesurfer/6.0.0
+#setenv FREESURFER_HOME /data/bswift-0/software/freesurfer/7.1.0-1/
+#source /data/bswift-0/software/freesurfer/7.1.0-1/SetUpFreeSurfer.csh
+setenv FREESURFER_HOME /data/bswift-0/software/freesurfer-dev/
+source /data/bswift-0/software/freesurfer-dev/SetUpFreeSurfer.csh
+
+setenv PATH /data/bswift-0/software/singularity/bin:$PATH
+
+#
+echo "------------------------------------------------------------------"
+echo "started freesurfer"
+echo ${Sub}
+date
+echo "------------------------------------------------------------------"
+# If the structural processing doesn't work well you can pre run it with a freesurfer call
+# recon-all -i sub-${Sub}_ses-ex_acq-1norm_T1w.nii.gz -T2 sub-${Sub}_ses-ex_acq-1norm_T2w.nii.gz -T2pial -openmp 6 -s sub-${Sub} -sd /data/bswift-1/dcallow/AMS/out/freesurfer -all -parallel
+#
+echo "------------------------------------------------------------------"
+echo "Ended freesurfer"
+echo ${Sub}
+date
+echo "------------------------------------------------------------------"
+
+ load the singularity module
+ module load singularity/2.6.0
+#
+# You can change the 4 lines below, I just like having it time stamp it
+echo "------------------------------------------------------------------"
+echo "Starting fMRIprep at:"
+echo working on ${Sub}
+date
+echo "------------------------------------------------------------------"
+#
+#
+# Running with fMRIPrep singularity
+setenv SINGULARITYENV_TEMPLATEFLOW_HOME /home/dcallow/templateflow
+
+singularity run --cleanenv \
+--home /data/bswift-1/dcallow:/home/dcallow \
+--bind /data/bswift-1/dcallow/templateflow:/home/dcallow/templateflow \
+/data/bswift-1/dcallow/fmriprep-20.2.5.simg \
+/home/dcallow/AMS_Output /home/dcallow/AMS/out participant \
+--participant-label ${Sub} \
+-w /home/dcallow/AMS/out/working \
+--skull-strip-template MNI152NLin2009cAsym --output-spaces MNI152NLin2009cAsym:res-1 \
+--nthreads 6 --n_cpus 6 --omp-nthreads 6 \
+--mem-mb 96000 \
+--low-mem \
+--skip_bids_validation \
+--fs-license-file /home/dcallow/license.txt
+
+echo "------------------------------------------------------------------"
+echo "Ended fMRIprep"
+echo ${Sub}
+date
