@@ -82,6 +82,7 @@ cd /Volumes/MRI_BACKUP/test/Diffusion/sub-${subj}/ses-${cond}/
 end
 end
 
+# Extract values after above subfields and images warped into template space
 
 echo ISO
 echo ${subj} CA1 ISO thresh
