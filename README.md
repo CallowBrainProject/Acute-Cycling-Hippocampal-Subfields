@@ -5,10 +5,10 @@
 
 
 # fMRI
-Preprocessed with fMRIprep
-Processed with 3dDeconvolve
-Analyzed with 3dLME
+Preprocessed with fMRIprep \
+Processed with 3dDeconvolve \
+Analyzed with 3dLME \
 
 # Diffusion
-Preprocessed with mrtrix
-Hippocampal ROIs extracted with ASHS and registered with ANTS
+Preprocessed with mrtrix \
+Hippocampal ROIs extracted with ASHS and registered with ANTS 
